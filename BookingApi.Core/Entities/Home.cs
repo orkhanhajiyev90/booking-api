@@ -4,6 +4,6 @@
     {
         public string? HomeId { get; set; }
         public string? HomeName { get; set; }
-        public HashSet<DateTime> AvailableSlots { get; set; } = new HashSet<DateTime>();
+        public HashSet<DateTime> AvailableSlots { get; set; } = new HashSet<DateTime> ();
     }
 }

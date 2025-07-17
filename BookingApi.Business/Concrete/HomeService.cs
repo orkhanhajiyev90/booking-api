@@ -1,5 +1,5 @@
-﻿using BookingApi.Business.Abstract;
-using BookingApi.Business.ExtensionMethods;
+﻿using AutoMapper;
+using BookingApi.Business.Abstract;
 using BookingApi.Core.Entities;
 using BookingApi.Core.Models.Response;
 using BookingApi.Data;
@@ -10,31 +10,34 @@ namespace BookingApi.Business.Concrete
     public class HomeService : IHomeService
     {
         private readonly IBaseRepository<Home> _repository;
-        public HomeService(IBaseRepository<Home> repository)
+        private readonly IMapper _mapper;
+
+        public HomeService(IBaseRepository<Home> repository, IMapper mapper)
         {
             _repository = repository;
             _repository.AddRange(InMemoryHomeStorage.Homes.Values);
+            _mapper = mapper;
         }
+
         public async Task<BaseListResponse<AvailableHomeResponse>> GetAvailableHomeAsync(DateTime startDate, DateTime endDate)
         {
-            //Get selected dateRange by DateTimeExtension Method
-            var dateRange = startDate.Date.GetDateRange(endDate.Date).ToList();
+            var dateRange = new List<DateTime>();
+            for (var date = startDate.Date; date <= endDate.Date; date = date.AddDays(1))
+            {
+                dateRange.Add(date);
+            }
 
-            //Filtering
             var availableHomes = await _repository
-                .GetAsync(home => dateRange.All(date => home.AvailableSlots.Contains(date.Date)));
+                .GetAsync(home => dateRange.All(d => home.AvailableSlots.Contains(d.Date)));
 
-            //Mapping
-            var response = availableHomes
-                .Select(home => new AvailableHomeResponse
-                {
-                    HomeId = home.HomeId,
-                    HomeName = home.HomeName,
-                    AvailableSlots = home.AvailableSlots
-                        .Where(d => d >= startDate.Date && d <= endDate.Date)
-                        .ToList()
-                })
-                .ToList();
+            var response = _mapper.Map<List<AvailableHomeResponse>>(availableHomes);
+
+            foreach (var item in response)
+            {
+                item.AvailableSlots = item.AvailableSlots
+                    .Where(d => d >= startDate && d <= endDate)
+                    .ToList();
+            }
 
             return new BaseListResponse<AvailableHomeResponse>(response);
         }

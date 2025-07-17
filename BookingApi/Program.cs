@@ -8,6 +8,8 @@ using BookingApi.Infrastructure.Serialization;
 using FluentValidation.AspNetCore;
 using FluentValidation;
 using Serilog;
+using AutoMapper;
+using BookingApi.AutoMapper;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day)
@@ -32,9 +34,15 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var config = new MapperConfiguration(cfg =>
+{
+    cfg.AddProfile<BookingApiMapProfile>();
+
+}).CreateMapper();
+
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
-
+builder.Services.AddAutoMapper(typeof(BookingApiMapProfile));
 
 var app = builder.Build();
 

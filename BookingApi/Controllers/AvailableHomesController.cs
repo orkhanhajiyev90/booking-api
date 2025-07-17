@@ -9,10 +9,12 @@ namespace BookingApi.Controllers
     public class AvailableHomesController : Controller
     {
         private readonly IHomeService _homeService;
+
         public AvailableHomesController(IHomeService homeService)
         {
             _homeService = homeService;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAvailableHomes([FromQuery] DateRangeRequest request)
         {

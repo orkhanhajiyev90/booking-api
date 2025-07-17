@@ -7,11 +7,13 @@ namespace BookingApi.Exception
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
+
         public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
             _next = next;
             _logger = logger;
         }
+
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try
@@ -24,6 +26,7 @@ namespace BookingApi.Exception
                 await HandleExceptionAsync(httpContext, ex);
             }
         }
+
         private static Task HandleExceptionAsync(HttpContext context, System.Exception exception)
         {
             context.Response.ContentType = "application/json";
