@@ -1,4 +1,4 @@
-﻿# Booking API
+﻿# Booking API – N-Layer Architecture (.NET 8.0)
 
 ## Purpose
 An API that allows users to view available homes for a specified date range.
@@ -6,8 +6,12 @@ An API that allows users to view available homes for a specified date range.
 ## Technologies
 - .NET 8.0  
 - In-memory data storage  
-- Clean Architecture  
+- N-Layer Architecture  
+- FluentValidation
+- AutoMapper
 - Async programming  
+- xUnit + Moq for testing
+- Serilog
 - Swagger (API documentation)
 
 ## Usage
@@ -20,8 +24,8 @@ An API that allows users to view available homes for a specified date range.
 To run tests: dotnet test
 
 ## Architecture
-- Controller: Request routing.
-- Service: Business logic (filtering).
-- Models: Domain models.
-- Data: In-memory storage.
+- BookingApi.API/ → Presentation Layer (Controllers).
+- BookingApi.Business/ → Business Logic (Services, Interfaces).
+- BookingApi.Core/ → Models and Entities.
+- BookingApi.DataAccess/ → Data Access (Data, Repositories).
 
