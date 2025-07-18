@@ -4,7 +4,7 @@
 An API that allows users to view available homes for a specified date range.
 
 ## Technologies
-- .NET 8.0  
+- .NET 8  
 - In-memory data storage  
 - N-Layer Architecture  
 - FluentValidation
